@@ -1,0 +1,41 @@
+@startuml
+!define RECTANGLE class
+skinparam classAttributeIconSize 0
+
+RECTANGLE SmartGlasses {
+  - Microphone
+  - Camera
+  - ESP32 / Microcontroller
+}
+
+RECTANGLE Smartphone {
+  - Flutter App
+  - Bluetooth Receiver
+  - Local Video/Audio Processing (optional)
+}
+
+RECTANGLE DesktopAgent {
+  - Video/Audio Ingestion
+  - Graph Database Integration
+  - Action Agent (Mouse/Keyboard Control)
+  - Context Management
+}
+
+RECTANGLE Backend {
+  - Graph Database (Neo4j or Custom)
+  - MCP Server
+  - LLM Integration
+  - Dynamic Schema
+}
+
+SmartGlasses --> Smartphone : Streams via Bluetooth\n(video/audio)
+Smartphone --> DesktopAgent : Forwards data (Bluetooth/Wi-Fi)
+DesktopAgent --> Backend : Insert Nodes/Relations\nvia Cypher/MCP
+Backend --> DesktopAgent : Responds with\nContextual Results/Actions
+
+note right of Backend
+  Graph structure dynamically updated
+  using attention scores and prompt-derived context
+end note
+
+@enduml
