@@ -1,0 +1,1 @@
+https://www.flux.ai/jvboid/esp-cam-motherboard-reference-design?editor=pcb_2d
