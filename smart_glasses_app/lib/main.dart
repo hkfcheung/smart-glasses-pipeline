@@ -26,23 +26,38 @@ class BLEMockPage extends StatefulWidget {
 }
 
 class _BLEMockPageState extends State<BLEMockPage> {
-  Future<void> sendBLEData(String value) async {
-    final uri = Uri.parse("http://10.0.0.32:5000/ingest"); // Replace with your Mac's IP
+  Future<void> sendBLEData() async {
+    final uri = Uri.parse("http://10.0.0.32:5000/ingest");  // Replace with your actual backend IP if needed
+
+    final payload = {
+      "modality": "multi",
+      "audio": {
+        "raw_text": "Turn off the kitchen light",
+        "language": "en-US"
+      },
+      "vision": {
+        "objects": ["person", "light switch", "kitchen"],
+        "snapshot_id": "frame_00123"
+      },
+      "device_id": "ESP32-CAM-01",
+      "timestamp": DateTime.now().toUtc().toIso8601String()
+    };
 
     try {
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'ble_payload': value}),
+        body: jsonEncode(payload),
       );
       print("Server response: ${response.body}");
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Sent: $value")),
+        SnackBar(content: Text('Data sent!')),
       );
     } catch (e) {
       print("Failed to send BLE data: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Failed to send data")),
+        SnackBar(content: Text('Failed to send data')),
       );
     }
   }
@@ -54,7 +69,7 @@ class _BLEMockPageState extends State<BLEMockPage> {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            sendBLEData("simulated-payload-from-simulator");
+            sendBLEData(); // ✅ fixed: no arguments
           },
           child: const Text("Send Simulated BLE Payload"),
         ),
